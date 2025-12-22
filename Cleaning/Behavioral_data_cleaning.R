@@ -53,7 +53,9 @@ clean_file <- function(file_path) {
   
   cleaned <- trial_data %>%
     select(all_of(final_cols)) %>%
-    slice_head(n = 600)
+    slice_head(n = 600) %>%
+    mutate(trial_number = row_number()) %>%
+    relocate(trial_number, .after = participant)
   
   file_name <- basename(file_path)
   output_file <- file.path(
@@ -68,7 +70,6 @@ clean_file <- function(file_path) {
 
 cleaned_files <- map(files, clean_file)
 cleaned_files
-
 
 
 
