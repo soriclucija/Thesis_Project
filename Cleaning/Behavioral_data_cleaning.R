@@ -24,7 +24,8 @@ clean_file <- function(file_path) {
       age_slider.response = first_value(age_slider.response),
       mouse_5.clicked_name = first_value(mouse_5.clicked_name),
       mouse_6.clicked_name = first_value(mouse_6.clicked_name),
-      session_start = first_value(session_start)
+      session_start = first_value(session_start),
+      session_end = first_value(session_end)
     )
   
   trial_data <- data %>%
@@ -34,12 +35,13 @@ clean_file <- function(file_path) {
       age_slider.response = repeat_values$age_slider.response,
       mouse_5.clicked_name = repeat_values$mouse_5.clicked_name,
       mouse_6.clicked_name = repeat_values$mouse_6.clicked_name,
-      session_start = repeat_values$session_start
+      session_start = repeat_values$session_start,
+      session_end = repeat_values$session_end
     )
   
   final_cols <- c(
     "participant",
-    "session_start",
+    "session_start", "session_end",
     "og_eccentricity", "og_contrast", "og_quiescence",
     "og_stim_phase1", "og_stim_phase2", "eccentricity",
     "baseContrast", "contrastDelta", "q", "bias",
@@ -57,6 +59,7 @@ clean_file <- function(file_path) {
     mutate(trial_number = row_number()) %>%
     relocate(trial_number, .after = participant)
   
+  
   file_name <- basename(file_path)
   output_file <- file.path(
     output_folder,
@@ -70,6 +73,7 @@ clean_file <- function(file_path) {
 
 cleaned_files <- map(files, clean_file)
 cleaned_files
+
 
 
 
