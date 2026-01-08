@@ -14,7 +14,9 @@ all_data_list <- map(files, ~ read_csv(.x, show_col_types = FALSE))
 all_data_list <- map2(all_data_list, files, ~ mutate(.x, filename = basename(.y)))
 
 
-all_data <- bind_rows(all_data_list)
+all_data <- bind_rows(all_data_list, .id = "source") %>%
+  mutate(participant = as.character(participant))
+
 
 
 dim(all_data)
