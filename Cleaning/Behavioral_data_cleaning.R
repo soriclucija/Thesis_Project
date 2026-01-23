@@ -13,7 +13,6 @@ clean_file <- function(file_path) {
   
   data <- read_csv(file_path, trim_ws = TRUE)
   
-  
   first_value <- function(x) x[which(!is.na(x) & x != "")][1]
   
   header_rows <- data %>%
@@ -54,18 +53,70 @@ clean_file <- function(file_path) {
     "mouse_5.clicked_name", "mouse_6.clicked_name"
   )
   
-  # Keep exactly 600 trials and add trial_number after participant
   cleaned <- trial_data %>%
     select(all_of(final_cols)) %>%
     slice_head(n = 600) %>%
     mutate(
-      participant = as.double(participant),  # ensure double
+      participant = as.double(participant),
       trial_number = row_number()
     ) %>%
     relocate(trial_number, .after = participant)
   
+# adapted into R from human_ibl_snapshots code (Anne Urai, 2024, GitHub)
+  cleaned <- cleaned %>%
+    mutate(
+      response = case_when(
+        eccentricity ==  15 & correct == 1 ~ 1,
+        eccentricity ==  15 & correct == 0 ~ 0,
+        eccentricity == -15 & correct == 1 ~ 0,
+        eccentricity == -15 & correct == 0 ~ 1,
+        TRUE ~ NA_real_
+      )
+    )
   
+  cleaned <- cleaned %>%
+    rename(
+      firstMovement_time = reaction_time,
+      stimContrast       = contrastDelta,
+      contrastLeft       = leftCont,
+      contrastRight      = rightCont,
+      choice             = response,
+      feedbackType       = correct,
+      subject            = participant
+    )
   
+
+  cleaned <- cleaned %>%
+    mutate(
+      stimSide = as.integer(eccentricity > 1)
+    )
+  
+
+  cleaned <- cleaned %>%
+    mutate(
+      feedbackType = if_else(feedbackType == 0, -1, 1)
+    )
+  
+
+  cleaned <- cleaned %>%
+    mutate(
+      response_time = response_time / 1000,
+      firstMovement_time = firstMovement_time / 1000
+    )
+  
+
+  max_rt <- max(cleaned$response_time, na.rm = TRUE)
+  
+  cleaned <- cleaned %>%
+    mutate(
+      response_times_max = if_else(
+        is.na(response_time),
+        max_rt,
+        response_time
+      )
+    )
+  
+
   file_name <- basename(file_path)
   output_file <- file.path(
     output_folder,
