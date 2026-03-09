@@ -145,14 +145,18 @@ def main():
 
     xticks = [-0.2, -0.1, -0.05, -0.02, 0, 0.02, 0.05, 0.1, 0.2]
     ax.set_xticks(xticks)
-    ax.set_xticklabels([str(x) for x in xticks], rotation=45, ha='center', fontsize=9, color='black')
+    ax.set_xticklabels([str(x) for x in xticks], rotation=70, ha='center', fontsize=12, color='black')
     ax.tick_params(axis='x', pad=8)
+
+    ax.set_yticks([0, 0.25, 0.5, 0.75, 1])
+    ax.set_yticklabels(['0', '0.25', '0.5', '0.75', '1'], fontsize=12, color='black')
+    ax.tick_params(axis='y', colors='black')
 
     for spine in ax.spines.values():
         spine.set_edgecolor('black')
 
-    ax.set_xlabel('Signed contrast', fontsize=11, color='black', labelpad=8)
-    ax.set_ylabel('Proportion rightward choice', fontsize=11, color='black', labelpad=8)
+    ax.set_xlabel('Signed contrast', fontsize=16, color='black', labelpad=14)
+    ax.set_ylabel('Proportion rightward choice', fontsize=16, color='black', labelpad=14)
 
     ax.set_ylim(0, 1)
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: str(int(v)) if v == int(v) else f'{v:.1f}'))
@@ -164,11 +168,11 @@ def main():
     ax.text(0.05, 0.97, '', transform=ax.transAxes)  
     ax.text(0.05, 0.97,
             r'$\bf{Min.}$' + r' ($\it{N}$ = 37)',
-            transform=ax.transAxes, fontsize=12,
+            transform=ax.transAxes, fontsize=16,
             color=COLORS[0], va='top', ha='left')
     ax.text(0.05, 0.91,
             r'$\bf{Full}$' + r' ($\it{N}$ = 35)',
-            transform=ax.transAxes, fontsize=12,
+            transform=ax.transAxes, fontsize=16,
             color=COLORS[1], va='top', ha='left')
 
     sns.despine(trim=True)
@@ -177,7 +181,7 @@ def main():
         artist.set_clip_on(False)
 
     plt.tight_layout()
-    plt.savefig('psychometric_choice.png', dpi=300, bbox_inches='tight')
+    plt.savefig('psychometric_choice.png', dpi=600, bbox_inches='tight')
     plt.show()
     print("\nFigure saved as psychometric_choice.png")
 
