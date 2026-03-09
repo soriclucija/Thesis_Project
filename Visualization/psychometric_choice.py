@@ -103,17 +103,28 @@ def plot_condition(df, color, label, ax, xlims):
                     .reset_index())
     mean_props = subj_props.groupby('signed_contrast')['choice_binary'].agg(['mean', 'sem']).reset_index()
 
+# Draw markers first (lower zorder)
+    ax.scatter(
+        mean_props['signed_contrast'],
+        mean_props['mean'],
+        color=color,
+        s=12**2,
+        zorder=20,
+        edgecolors='white',
+        linewidths=2,
+    )
+
+# Draw error bars on top (higher zorder)
     ax.errorbar(
         mean_props['signed_contrast'],
         mean_props['mean'],
         yerr=mean_props['sem'],
-        fmt='o',
+        fmt='none',
         color=color,
-        markersize=5,
-        linewidth=1.5,
-        capsize=3,
-        zorder=20,
+        linewidth=3,
+        zorder=21,
     )
+    
 
     params_arr = np.array(fitted_params)
     print(f"\n{label} ({len(fitted_params)} subjects fitted):")
