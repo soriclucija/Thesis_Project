@@ -5,6 +5,7 @@ import seaborn as sns
 from scipy.optimize import minimize
 from scipy.special import erf
 
+
 DATA_PATH = r"C:\Users\lucij\Desktop\Leiden\Year 2\Thesis Project\2024_data\combined_dataset.csv"
 
 COLORS = {0: "#daa800", 1: "#840000"}
@@ -146,8 +147,16 @@ def main():
     xmax = np.max(np.abs(df['signed_contrast'].dropna()))
     xlims = np.linspace(-xmax, xmax, 200)
 
-    plt.rcParams['font.family'] = 'Helvetica'
     sns.set_style("ticks")
+    import matplotlib.font_manager as fm
+    import matplotlib as mpl
+    mpl.rcParams['font.family'] = 'Helvetica'
+    mpl.rcParams['font.sans-serif'] = ['Helvetica']
+
+    hv       = fm.FontProperties(family='Helvetica', size=12)
+    hv_large = fm.FontProperties(family='Helvetica', size=16)
+    hv_bold  = fm.FontProperties(family='Helvetica', size=16, weight='bold')
+
     fig, ax = plt.subplots(figsize=(5.5, 5.5))
 
     for condition in [0, 1]:
@@ -160,31 +169,33 @@ def main():
     ax.tick_params(axis='x', pad=8)
 
     ax.set_yticks([0, 0.25, 0.5, 0.75, 1])
-    ax.set_yticklabels(['0', '0.25', '0.5', '0.75', '1'], fontsize=12, color='black')
+    ax.set_yticklabels(['0.00', '0.25', '0.50', '0.75', '1.00'], fontsize=12, color='black')
     ax.tick_params(axis='y', colors='black')
 
     for spine in ax.spines.values():
         spine.set_edgecolor('black')
 
-    ax.set_xlabel('Signed contrast', fontsize=16, color='black', labelpad=14)
-    ax.set_ylabel('Proportion rightward choice', fontsize=16, color='black', labelpad=14)
-
+    ax.set_xlabel('Signed contrast', color='black', labelpad=14,
+                  fontproperties=hv_large)
+    ax.set_ylabel('Rightward choice (proportion)', color='black', labelpad=14,
+                  fontproperties=hv_large)
+    
     ax.set_ylim(0, 1)
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: str(int(v)) if v == int(v) else f'{v:.1f}'))
+    #ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: str(int(v)) if v == int(v) else f'{v:.1f}')) #unnecessary formatting
 
     legend = ax.get_legend()
     if legend:
         legend.remove()
 
-    ax.text(0.05, 0.97, '', transform=ax.transAxes)  
-    ax.text(0.05, 0.97,
-            r'$\bf{Min.}$' + r' ($\it{N}$ = 37)',
-            transform=ax.transAxes, fontsize=16,
-            color=COLORS[0], va='top', ha='left')
-    ax.text(0.05, 0.91,
-            r'$\bf{Full}$' + r' ($\it{N}$ = 35)',
-            transform=ax.transAxes, fontsize=16,
-            color=COLORS[1], va='top', ha='left')
+    #ax.text(0.05, 0.97, '', transform=ax.transAxes)  #will do this separately
+    #ax.text(0.05, 0.97,
+            #r'$\bf{Min.}$' + r' ($\it{N}$ = 37)',
+            #transform=ax.transAxes, fontsize=16,
+            #color=COLORS[0], va='top', ha='left')
+    #ax.text(0.05, 0.91,
+            #r'$\bf{Full}$' + r' ($\it{N}$ = 35)',
+            #transform=ax.transAxes, fontsize=16,
+            #color=COLORS[1], va='top', ha='left')
 
     sns.despine(trim=True)
 

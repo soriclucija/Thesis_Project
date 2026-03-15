@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+import matplotlib.font_manager as fm
 import seaborn as sns
 from scipy.optimize import minimize
 from scipy.special import erf
@@ -162,6 +164,8 @@ def main():
     print(params_df.groupby('condition')[['sigma', 'lapse']].describe())
 
     sns.set_style("ticks")
+    mpl.rcParams['font.family'] = 'Helvetica'
+    mpl.rcParams['font.sans-serif'] = ['Helvetica']
     fig, axes = plt.subplots(1, 2, figsize=(8, 5))
 
     panels = [
