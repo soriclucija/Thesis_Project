@@ -2,12 +2,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import matplotlib.font_manager as fm
 import seaborn as sns
 from scipy.optimize import minimize
 from scipy.special import erf
-from scipy.stats import mannwhitneyu
-
+from scipy.stats import ttest_ind
 DATA_PATH = r"C:\Users\lucij\Desktop\Leiden\Year 2\Thesis Project\2024_data\combined_dataset.csv"
 
 COLORS = {0: "#daa800", 1: "#840000"}
@@ -121,12 +119,20 @@ def plot_panel(ax, params_df, col, ylabel):
     ax.spines['bottom'].set_bounds(-0.2, 1.2)
 
 def run_stats(params_df):
-    print("\n─── Statistical Tests (Mann-Whitney U) ───")
-    for col, name in [('sigma', 'Threshold'), ('lapse', 'Lapse rate')]:
+    print("\n─── Statistical Tests (t-test) ───")
+    
+    for col, name in [
+        ('sigma', 'Threshold (σ)'),
+        ('lapse', 'Lapse rate (λ)'),
+        ('mu', 'Bias (μ)'),
+        ('slope', 'Slope')
+    ]:
         vals0 = params_df[params_df['condition'] == 0][col].values
         vals1 = params_df[params_df['condition'] == 1][col].values
-        stat, p = mannwhitneyu(vals0, vals1, alternative='two-sided')
-
+        
+        stat, p = ttest_ind(vals0, vals1, equal_var=False)
+        df = len(vals0) + len(vals1) - 2
+        
         if p < 0.001:
             p_str = "< .001"
             stars = "***"
@@ -139,8 +145,9 @@ def run_stats(params_df):
         else:
             p_str = f"= {p:.3f}"
             stars = "ns"
+        
+        print(f"  {name}: t({df}) = {stat:.2f}, p {p_str}  {stars}")
 
-        print(f"  {name}: U = {stat:.0f}, p {p_str}  {stars}")
 
 def main():
     df = pd.read_csv(DATA_PATH)
@@ -152,16 +159,20 @@ def main():
         for subj in subset['subject'].unique():
             params = fit_one_subject(subset[subset['subject'] == subj])
             if params is not None:
+                mu, sigma, gamma, lam = params
+                slope = (1 - gamma - lam) / (np.sqrt(2*np.pi) * sigma)  # compute slope at μ
+
                 records.append({
                     'condition': condition,
                     'subject':   subj,
-                    'mu':        params[0],
-                    'sigma':     params[1],
-                    'lapse':     (params[2] + params[3]) / 2,  # average of gamma and lambda
+                    'mu':        mu,       # bias
+                    'sigma':     sigma,    # threshold
+                    'lapse':     lam,      # lapse rate
+                    'slope':     slope,    # slope
                 })
 
     params_df = pd.DataFrame(records)
-    print(params_df.groupby('condition')[['sigma', 'lapse']].describe())
+    print(params_df.groupby('condition')[['sigma', 'lapse', 'mu', 'slope']].describe())
 
     sns.set_style("ticks")
     mpl.rcParams['font.family'] = 'Helvetica'

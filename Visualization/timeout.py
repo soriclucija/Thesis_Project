@@ -69,7 +69,7 @@ for label in ax.get_yticklabels():
     label.set_fontproperties(helvetica)
     label.set_fontsize(14)
 
-ax.set_ylabel('Timeout Rate (%)', fontsize=16, color='black', labelpad=14,
+ax.set_ylabel('Timeout rate (%)', fontsize=16, color='black', labelpad=14,
               fontproperties=helvetica)
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f'{y*100:.0f}'))
 ax.yaxis.set_major_locator(plt.MultipleLocator(0.02))
