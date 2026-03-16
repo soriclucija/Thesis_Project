@@ -93,5 +93,5 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 
 plt.tight_layout()
-plt.savefig('timeout_rate_by_condition.png', dpi=500, bbox_inches='tight')
+plt.savefig('timeout_rate_by_condition.png', dpi=600, bbox_inches='tight')
 plt.show()
