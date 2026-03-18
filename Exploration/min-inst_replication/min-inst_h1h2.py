@@ -33,8 +33,8 @@ for col in z_cols:
         p_val = p_two_tailed
         tail = 'two-tailed'
     else:
-        p_val = p_two_tailed / 2 if t_stat > 0 else 1 - p_two_tailed / 2
-        tail = 'one-tailed'
+        p_val = p_two_tailed
+        tail = 'two-tailed'
         
     results.append({
         "measure":      col,
