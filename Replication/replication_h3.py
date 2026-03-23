@@ -44,8 +44,8 @@ for pupil in pupil_cols:
             p_quad    = p_quad_two
             tail_quad = 'two-tailed'
         else:
-            p_quad    = p_quad_two / 2 if t_quad < 0 else 1 - p_quad_two / 2
-            tail_quad = 'one-tailed (negative, Yerkes-Dodson)'
+            p_quad    = p_quad_two / 2 if t_quad > 0 else 1 - p_quad_two / 2
+            tail_quad = 'one-tailed (positive, Yerkes-Dodson)'
 
         regression_results.append({
             'pupil':       pupil,
@@ -104,16 +104,16 @@ for pupil in pupil_cols:
             p_lin    = p_lin_two
             tail_lin = 'two-tailed'
         else:
-            p_lin    = p_lin_two / 2 if t_lin < 0 else 1 - p_lin_two / 2
-            tail_lin = 'one-tailed (negative)'
+            p_lin    = p_lin_two / 2 if t_lin > 0 else 1 - p_lin_two / 2
+            tail_lin = 'one-tailed (positive, Yerkes-Dodson)'
 
         t_quad, p_quad_two = stats.ttest_1samp(quad_coefs, popmean=0)
         if pupil == 'derivative_z':
             p_quad    = p_quad_two
             tail_quad = 'two-tailed'
         else:
-            p_quad    = p_quad_two / 2 if t_quad < 0 else 1 - p_quad_two / 2
-            tail_quad = 'one-tailed (negative, Yerkes-Dodson)'
+            p_quad    = p_quad_two / 2 if t_quad > 0 else 1 - p_quad_two / 2
+            tail_quad = 'one-tailed (positive, Yerkes-Dodson)'
 
         controlled_results.append({
             'pupil':       pupil,
