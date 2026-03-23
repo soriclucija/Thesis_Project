@@ -268,6 +268,3 @@ def plot_individual_quad_auc(subj_df):
             plt.savefig(filename, dpi=600, bbox_inches='tight')
             plt.close(fig)
             print(f"Saved: {filename}")
-
-# Run with:
-# plot_individual_quad_auc(subj_plain)
