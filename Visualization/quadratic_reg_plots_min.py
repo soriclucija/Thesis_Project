@@ -9,10 +9,10 @@ DATA_PATH = r"C:\Users\lucij\Desktop\Leiden\Year 2\Thesis Project\2024_data\repl
 
 BEHAVIOR_COLS = ['fa_rate_z', 'slowest_quintile_z', 'RT_avg_z', 'rtcv_z']
 COLORS = {
-    'fa_rate_z':          "#290000",
-    'slowest_quintile_z': "#6d2a19",
-    'RT_avg_z':           '#ad6219',
-    'rtcv_z':             "#daa800",
+    'fa_rate_z':          '#00373d',
+    'slowest_quintile_z': '#59acb1',
+    'RT_avg_z':           '#d077ee',
+    'rtcv_z':             '#4b0088',
 }
 
 def get_uncontrolled_fits(df, pupil):
@@ -61,14 +61,14 @@ def plot_panel(ax, subject_fits, title, hv, hv_large):
                 color=color, linewidth=2.5, zorder=3)
 
 
-    ax.set_ylim(-1, 3)
-    ax.set_xlim(-3, 5)
+    ax.set_ylim(-0.5, 2)
+    ax.set_xlim(-3, 3)
     ax.set_title(title, fontproperties=hv_large, pad=10)
     ax.set_xlabel('Pupil diameter (z)', color='black', labelpad=14,
                   fontproperties=hv_large)
     ax.set_ylabel('Behavior (z)', color='black', labelpad=14,
                   fontproperties=hv_large)
-    ax.tick_params(axis='both', colors='black')
+    ax.tick_params(axis='both', colors='black', labelsize=14)
     for label in ax.get_xticklabels() + ax.get_yticklabels():
         label.set_fontproperties(hv)
     for spine in ax.spines.values():
@@ -88,7 +88,7 @@ def main():
     mpl.rcParams['font.family']     = 'Helvetica'
     mpl.rcParams['font.sans-serif'] = ['Helvetica']
     hv       = fm.FontProperties(family='Helvetica', size=12)
-    hv_large = fm.FontProperties(family='Helvetica', size=14)
+    hv_large = fm.FontProperties(family='Helvetica', size=16)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
 
@@ -98,7 +98,7 @@ def main():
     ax2.set_ylabel('')
 
     sns.despine(trim=True, offset=10)
-    plt.tight_layout()
+    plt.tight_layout(w_pad=3)
     plt.savefig('quadratic_baseline_behavior_both.png', dpi=600, bbox_inches='tight')
     plt.show()
     print("Saved as quadratic_baseline_behavior_both.png")

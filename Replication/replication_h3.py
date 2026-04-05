@@ -36,7 +36,7 @@ for pupil in pupil_cols:
             p_lin    = p_lin_two
             tail_lin = 'two-tailed'
         else:
-            p_lin    = p_lin_two / 2 if t_lin > 0 else 1 - p_lin_two / 2
+            p_lin    = p_lin_two / 2 if t_lin < 0 else 1 - p_lin_two / 2 #baseline diameter linearly related to performance (negative slope)
             tail_lin = 'one-tailed'
 
         t_quad, p_quad_two = stats.ttest_1samp(quad_coefs, popmean=0)
