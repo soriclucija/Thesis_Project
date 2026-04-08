@@ -42,6 +42,7 @@ def make_2x2_plot(data, color, filename):
             columns='window_index',
             values=col
         )
+        
 
         mean_series = pivot.mean(axis=0)
         sem_series  = pivot.sem(axis=0)
