@@ -2,22 +2,15 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 
-# ------------------------------------------------------------
-# LOAD DATA
-# ------------------------------------------------------------
 df = pd.read_csv(
     r"C:\Users\lucij\Documents\combined_behavior_data_VDB.csv"
 )
 
+z_cols = [col for col in df.columns if col.endswith('_z')] #it is actually all columns, but I kept code from before
+df[z_cols] = df.groupby(['participant', 'block'])[z_cols].transform(
+    lambda x: (x - x.mean()) / x.std()
+)
 
-# ------------------------------------------------------------
-# DEFINE Z-COLUMNS
-# ------------------------------------------------------------
-z_cols = [col for col in df.columns if col.endswith('_z')]
-
-# ------------------------------------------------------------
-# SLOPE FUNCTION (time-on-task within block)
-# ------------------------------------------------------------
 def fit_slope(series):
     x = np.arange(len(series))
     mask = ~np.isnan(series)
@@ -28,18 +21,12 @@ def fit_slope(series):
     slope, _, _, _, _ = stats.linregress(x[mask], series[mask])
     return slope
 
-# ------------------------------------------------------------
-# COMPUTE SLOPES (participant × block)
-# ------------------------------------------------------------
 slopes_df = df.groupby(['participant', 'block'])[z_cols].apply(
     lambda grp: grp.apply(fit_slope)
 ).reset_index()
-
+print(slopes_df.shape[0])
 participant_slopes = slopes_df.groupby('participant')[z_cols].mean().reset_index()
 
-# ------------------------------------------------------------
-# STATS ON SLOPES
-# ------------------------------------------------------------
 results = []
 
 for col in z_cols:
@@ -47,7 +34,7 @@ for col in z_cols:
 
     t_stat, p_two_tailed = stats.ttest_1samp(col_slopes, popmean=0)
 
-    # one-tailed vs two-tailed (as in van den Brink et al.)
+    # one-tailed vs two-tailed (as in van den Brink et al., 2016)
     if any(x in col for x in ['baseline', 'derivative']):
         p_val = p_two_tailed
         tail = 'two-tailed'
@@ -70,15 +57,12 @@ participant_slopes = pd.DataFrame(results)
 print("\nSLOPE RESULTS")
 print(participant_slopes.to_string(index=False))
 
-# ------------------------------------------------------------
-# PUPIL CORRELATION (within participant)
-# baseline_z vs derivative_z across windows
-# ------------------------------------------------------------
+# pupil correlation
 fisher_zs = []
 
 for subj, grp in df.groupby('participant'):
 
-    # average across blocks first (important for stability)
+    # average across blocks 
     sub_avg = grp.groupby('window')[['baseline_z', 'derivative_z']].mean()
 
     b = sub_avg['baseline_z'].values
@@ -94,9 +78,7 @@ for subj, grp in df.groupby('participant'):
 
 fisher_zs = np.array(fisher_zs)
 
-# ------------------------------------------------------------
-# GROUP STATISTICS
-# ------------------------------------------------------------
+# group stats
 t_stat, p_val = stats.ttest_1samp(fisher_zs, popmean=0)
 
 n = len(fisher_zs)

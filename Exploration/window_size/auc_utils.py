@@ -209,62 +209,88 @@ def plot_individual_quad_auc(subj_df):
     mpl.rcParams['font.family'] = 'Helvetica'
     mpl.rcParams['font.sans-serif'] = ['Helvetica']
     
-    hv = fm.FontProperties(family='Helvetica', size=9)
-    hv_large = fm.FontProperties(family='Helvetica', size=14)
+    hv = fm.FontProperties(family='Helvetica', size=12)
+    hv_large = fm.FontProperties(family='Helvetica', size=16)
 
-    conditions = [1, 0] 
+    conditions = [1, 0]
     pupils = subj_df['pupil'].unique()
     
     for pupil_type in pupils:
         if pupil_type == 'derivative_z':
             continue
-            
+
+        fig, ax = plt.subplots(figsize=(5.5, 5.5))
+
+        all_ws = set()
+
         for condition in conditions:
-            subset_stats = (subj_df[(subj_df['condition'] == condition) & (subj_df['pupil'] == pupil_type)]
-                            .groupby(['window_size'])['quad_coef'] 
-                            .mean()
-                            .reset_index())
+            subset_stats = (
+                subj_df[
+                    (subj_df['condition'] == condition) &
+                    (subj_df['pupil'] == pupil_type)
+                ]
+                .groupby('window_size')['quad_coef']
+                .mean()
+                .reset_index()
+            )
 
-            if subset_stats.empty: continue
+            if subset_stats.empty:
+                continue
 
-            fig, ax = plt.subplots(figsize=(5.5, 5.5))
-            
             color = COLORS[condition]
             label = LABELS[condition]
-            
-            ax.plot(subset_stats['window_size'], subset_stats['quad_coef'], 
-                    color=color, linewidth=2.5, zorder=10)
 
-            ax.fill_between(subset_stats['window_size'], subset_stats['quad_coef'], 0, 
-                            color=color, alpha=0.1, zorder=5)
+            ax.plot(
+                subset_stats['window_size'], subset_stats['quad_coef'],
+                color=color, linewidth=3, label=label, zorder=10
+            )
+            ax.scatter(
+                subset_stats['window_size'], subset_stats['quad_coef'],
+                color=color, s=12**2, zorder=20,
+                edgecolors='white', linewidths=2, alpha=1
+            )
 
-            ax.scatter(subset_stats['window_size'], subset_stats['quad_coef'], 
-                       color=color, s=12**2, zorder=20, 
-                       edgecolors='white', linewidths=2, alpha=0.7)
+            all_ws.update(subset_stats['window_size'].tolist())
 
-            ax.set_title('', fontproperties=hv_large, pad=20)
-            
-            ws_ticks = sorted(subset_stats['window_size'].unique())
-            ax.set_xticks(ws_ticks)
-            ax.set_xticklabels([str(x) for x in ws_ticks], rotation=75, ha='center', color='black')
-            
-            for label_obj in ax.get_xticklabels() + ax.get_yticklabels():
-                label_obj.set_fontproperties(hv)
+        ws_ticks = sorted(all_ws)
+        ax.set_xticks(ws_ticks)
+        ax.set_xticklabels([str(x) for x in ws_ticks], ha='center', color='black')
+        # offset every second label downward
+        for i, label_obj in enumerate(ax.get_xticklabels()):
+            if i % 2 == 1: 
+                label_obj.set_transform(
+                    label_obj.get_transform() +
+                    mpl.transforms.ScaledTranslation(0, -0.25, fig.dpi_scale_trans)
+                )
+                
+        for label_obj in ax.get_xticklabels() + ax.get_yticklabels():
+            label_obj.set_fontproperties(hv)
 
-            ax.set_xlabel('Window size', fontproperties=hv_large, labelpad=14)
-            ax.set_ylabel('Quadratic coefficient', fontproperties=hv_large, labelpad=14)
-            
-            for spine in ax.spines.values():
-                spine.set_edgecolor('black')
-            sns.despine(ax=ax, trim=True)
-            
-            for artist in ax.lines + ax.collections:
-                artist.set_clip_on(False)
+        ax.set_xlabel('Window size', fontproperties=hv_large, labelpad=12)
+        ax.set_ylabel('Quadratic coefficient', fontproperties=hv_large, labelpad=12)
+        ax.set_title('', fontproperties=hv_large, pad=20)
+        ax.tick_params(axis='both', which='both',
+                       length=2, width=1,
+                       direction='out', pad=4,
+                       colors='black', labelsize=14)
 
-            plt.tight_layout()
-            
-            clean_label = LABELS[condition].replace(".","")
-            filename = f'quad_auc_{clean_label}_{pupil_type}.png'
-            plt.savefig(filename, dpi=600, bbox_inches='tight')
-            plt.close(fig)
-            print(f"Saved: {filename}")
+        for spine in ax.spines.values():
+            spine.set_edgecolor('black')
+        sns.despine(ax=ax, trim=False)
+
+        for artist in ax.lines + ax.collections:
+            artist.set_clip_on(False)
+
+        fig.canvas.draw()
+
+        for i, label_obj in enumerate(ax.get_xticklabels()):
+            if i % 2 == 1:
+                label_obj.set_transform(
+                    label_obj.get_transform() +
+                    mpl.transforms.ScaledTranslation(0, -0.2, fig.dpi_scale_trans)
+                )
+
+        filename = f'quad_auc_controlled.png'
+        plt.savefig(filename, dpi=600, bbox_inches='tight')
+        plt.close(fig)
+        print(f"Saved: {filename}")

@@ -34,6 +34,8 @@ def plot_baseline_derivative(df_sub, color, filename):
 
         ax.plot(x, y, color=color, linewidth=3)
         ax.fill_between(x, y - sem, y + sem, color=color, alpha=0.15)
+        if col == 'derivative':
+            ax.axhline(y=0, color='#fdeabe', linestyle='--', linewidth=2, alpha=0.8, zorder=1)
 
         ax.set_xlabel('Time on task', fontproperties=hv_large, labelpad=4)
         ax.set_ylabel(label, fontproperties=hv_large, labelpad=12)

@@ -9,6 +9,11 @@ df = pd.read_csv(
 pupil_cols = ['baseline_z', 'derivative_z']
 behavior_cols = ['fa_rate_z', 'slowest_quintile_z', 'RT_avg_z', 'rtcv_z']
 
+all_cols = pupil_cols + behavior_cols
+df[all_cols] = df.groupby(['participant', 'block'])[all_cols].transform(
+    lambda x: (x - x.mean()) / x.std()
+)
+
 def get_coefs(grp, xcol, ycol, control_col=None):
 
     y = grp[ycol].values

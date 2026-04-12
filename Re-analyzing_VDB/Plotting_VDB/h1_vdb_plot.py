@@ -15,10 +15,10 @@ hv       = fm.FontProperties(family='Helvetica', size=12)
 hv_large = fm.FontProperties(family='Helvetica', size=16)
 
 measures = [
-    ('fa_rate_z',          'Lapse rate (z, %)',               'percent', 25),
-    ('slowest_quintile_z', 'Slowest 1/5th of trial (z, %)',  'percent', 25),
-    ('RT_avg_z',           'Response time (z, s)',             'sec',     0.3),
-    ('rtcv_z',             'RT SD / mean RT (z)',               'ratio',   0.25),
+    ('fa_rate_z',          'Lapse rate (%)',               'percent', 25),
+    ('slowest_quintile_z', 'Slowest 1/5th of trial (%)',  'percent', 20),
+    ('RT_avg_z',           'Response time (s)',             'sec',     0.3),
+    ('rtcv_z',             'RT SD / mean RT',               'ratio',   0.2),
 ]
 
 COLOR = "#2e2e2e"
