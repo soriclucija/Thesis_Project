@@ -1,6 +1,6 @@
 # Tracking Behavioral and Physiological Dynamics in Sustained Perceptual Decisions
 
-Master's thesis project — School Year 2025/2026
+MSc Thesis project @ Leiden University, 25/26
 
 This repository contains all code developed for the master's thesis *Tracking Behavioral and Physiological Dynamics in Sustained Perceptual Decisions*. The project investigates how behavioral and physiological signals (primarily pupillometry) evolve over the course of sustained perceptual decision-making, including a confirmatory replication of prior findings and a range of exploratory analyses.
 
