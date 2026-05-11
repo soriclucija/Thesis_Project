@@ -49,6 +49,7 @@ clean_file <- function(file_path) {
     "trials.thisIndex", "thisRow.t", "signed_contrast",
     "leftCont", "rightCont", "reaction_time", "response_time",
     "correct", "timeout",
+    "fix.started", "feedback.stopped",
     "instructions", "age_slider.response",
     "mouse_5.clicked_name", "mouse_6.clicked_name"
   )
@@ -58,10 +59,11 @@ clean_file <- function(file_path) {
     slice_head(n = 600) %>%
     mutate(
       participant = as.double(participant),
-      trial_number = row_number()
+      trial_number = row_number(),
+      trial_length = feedback.stopped - fix.started    
     ) %>%
     relocate(trial_number, .after = participant)
-  
+
 # adapted into R from human_ibl_snapshots code (Anne Urai, 2024, GitHub)
   cleaned <- cleaned %>%
     mutate(
