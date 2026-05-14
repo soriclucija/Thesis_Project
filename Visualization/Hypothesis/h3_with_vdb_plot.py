@@ -7,7 +7,7 @@ import matplotlib.font_manager as fm
 import seaborn as sns
 
 # our data
-df = pd.read_csv(r"C:\Users\lucij\Desktop\Leiden\Year 2\Thesis Project\2024_data\replication_processing.csv")
+df = pd.read_csv(r"C:\Users\lucij\Desktop\Leiden\Year 2\Thesis Project\2024_data\timed_replication_processed.csv")
 
 # reproduction data
 df_vdb = pd.read_csv(r"C:\Users\lucij\Documents\combined_behavior_data_VDB.csv")
