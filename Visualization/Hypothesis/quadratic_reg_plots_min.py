@@ -5,7 +5,7 @@ import matplotlib.font_manager as fm
 import matplotlib as mpl
 import seaborn as sns
 
-DATA_PATH = r"C:\Users\lucij\Desktop\Leiden\Year 2\Thesis Project\2024_data\replication_processing.csv"
+DATA_PATH = r"C:\Users\lucij\Desktop\Leiden\Year 2\Thesis Project\2024_data\timed_replication_processed.csv"
 
 BEHAVIOR_COLS = ['fa_rate_z', 'slowest_quintile_z', 'RT_avg_z', 'rtcv_z']
 COLORS = {
@@ -59,10 +59,14 @@ def plot_panel(ax, subject_fits, title, hv, hv_large):
         mean_c = np.mean([f['coefs'] for f in fits], axis=0)
         ax.plot(x_range, mean_c[0] + mean_c[1]*x_range + mean_c[2]*x_range**2,
                 color=color, linewidth=2.5, zorder=3)
+    ax.plot([-3, 0], [0, 0], color='grey', linestyle='--', linewidth=1, zorder=1, alpha=0.4)
+    ax.plot([0, 0], [-0.5, 0], color='grey', linestyle='--', linewidth=1, zorder=1, alpha=0.4)
 
 
-    ax.set_ylim(-0.5, 2)
-    ax.set_xlim(-3, 3)
+    ax.set_xticks([-2.5, 0, 2.5, 5])
+    ax.set_yticks([0, 1, 2])                              
+    ax.set_ylim(-0.5, 2.5)
+    ax.set_xlim(-3, 5)
     ax.set_title(title, fontproperties=hv_large, pad=10)
     ax.set_xlabel('Pupil diameter (z)', color='black', labelpad=14,
                   fontproperties=hv_large)
@@ -90,15 +94,20 @@ def main():
     hv       = fm.FontProperties(family='Helvetica', size=12)
     hv_large = fm.FontProperties(family='Helvetica', size=16)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(4, 8))
 
     plot_panel(ax1, uncontrolled, '', hv, hv_large)
     plot_panel(ax2, controlled,   '', hv, hv_large)
 
-    ax2.set_ylabel('')
+    ax1.set_xlabel('')
+    ax1.set_box_aspect(1)
+    ax2.set_box_aspect(1)
 
-    sns.despine(trim=True, offset=10)
-    plt.tight_layout(w_pad=3)
+    sns.despine(trim=False, offset=10)
+    plt.tight_layout(h_pad=3)
+
+    sns.despine(trim=False, offset=10)
+    plt.tight_layout(w_pad=2)
     plt.savefig('quadratic_baseline_behavior_both.png', dpi=600, bbox_inches='tight')
     plt.show()
     print("Saved as quadratic_baseline_behavior_both.png")
