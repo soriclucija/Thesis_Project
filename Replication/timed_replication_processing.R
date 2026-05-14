@@ -7,6 +7,10 @@ window_width <- 50
 step_size    <- 15
 n_trials     <- 600
 
+# creating these columns for the output CSV:
+# subject	window	instructions	fa_rate	timeout_rate	slowest_quintile	RT_avg	rtcv	baseline	derivative	fa_rate_z	timeout_rate_z	slowest_quintile_z	RT_avg_z	rtcv_z	baseline_z	derivative_z
+
+
 compute_fa_windows <- function(subject_data) {
   
   subject_data <- subject_data[order(subject_data$trial_number), ]
