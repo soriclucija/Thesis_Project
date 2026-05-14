@@ -2,9 +2,9 @@ library(tidyverse)
 
 data <- read.csv("C:/Users/lucij/Desktop/Leiden/Year 2/Thesis Project/2024_data/combined_dataset.csv")
 
-window_width <- 50
+window_width <- 50 #from VDB, can be adjusted
 step_size    <- 15
-n_trials     <- 600
+n_trials     <- 600 
 
 compute_fa_windows <- function(subject_data) {
   
