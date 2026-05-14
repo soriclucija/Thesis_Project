@@ -5,7 +5,7 @@ data <- read.csv("C:/Users/lucij/Desktop/Leiden/Year 2/Thesis Project/2024_data/
 n_trials <- 600
 
 window_widths <- c(12, 20, 28, 36, 44, 52, 60, 68, 76, 84,
-                   92, 100, 108, 116, 124, 132, 140, 148)
+                   92, 100, 108, 116, 124, 132, 140, 148) #based on VDB, can be adjusted for timing differences 
 
 step_sizes <- round(0.333 * window_widths)
 
